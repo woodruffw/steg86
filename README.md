@@ -59,7 +59,7 @@ To extract a message from a binary:
 ```bash
 $ steg86 extract bash.steg > my_message
 $ cat message
-here is my secret message!
+here is my secret message
 ```
 
 `steg86 extract` will exit with a non-zero status if a message cannot be extracted (e.g.,
@@ -113,6 +113,9 @@ independently; the refinements discussed in the paper may or may not be more opt
 implemented in *steg86*.
 
 ### Future improvements
+
+* *steg86* currently limits the embedded message to 16KB. This is a purely artificial limitation
+that could be resolved with some small format changes.
 
 * x86 (and x86_64) both have multi-byte NOPs, for alignment purposes. Additional information can be
 hidden in these in a few ways:
