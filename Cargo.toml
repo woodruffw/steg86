@@ -1,0 +1,20 @@
+[package]
+name = "steg86"
+version = "0.1.0"
+authors = ["William Woodruff <william@yossarian.net>"]
+edition = "2018"
+readme = "README.md"
+homepage = "https://github.com/woodruffw/steg86"
+repository = "https://github.com/woodruffw/steg86"
+keywords = ["cli", "steganography", "steg", "x86"]
+categories = ["command-line-utilities", "encoding"]
+
+[dependencies]
+anyhow = "1.0"
+bit-vec = "0.6.2"
+clap = "3.0.0-beta.1"
+env_logger = "0.7"
+goblin = "0.2"
+iced-x86 = "1.8.0"
+lazy_static = "1.4.0"
+log = "0.4"
