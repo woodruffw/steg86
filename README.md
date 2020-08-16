@@ -5,7 +5,7 @@ steg86
 [![Build Status](https://img.shields.io/github/workflow/status/woodruffw/steg86/CI/master)](https://github.com/woodruffw/steg86/actions?query=workflow%3ACI)
 
 *steg86* is a format-agnostic [steganographic](https://en.wikipedia.org/wiki/Steganography) tool
-for x86 and x86_64 binaries. You can use it to hide information in compiled programs, regardless of
+for x86 and AMD64 binaries. You can use it to hide information in compiled programs, regardless of
 executable format (PE, ELF, Mach-O, raw, &amp;c). It has no performance *or* size impact on the files
 that it modifies (adding a message does *not* increase binary size or decrease execution speed).
 
@@ -120,7 +120,7 @@ implemented in *steg86*.
 * *steg86* currently limits the embedded message to 16KB. This is a purely artificial limitation
 that could be resolved with some small format changes.
 
-* x86 (and x86_64) both have multi-byte NOPs, for alignment purposes. Additional information can be
+* x86 (and AMD64) both have multi-byte NOPs, for alignment purposes. Additional information can be
 hidden in these in a few ways:
   * The `OF 1F /0`  multi-byte NOP can be up to 9 bytes, of which up to 5 are free
   (SIB + 4-byte displacement).
