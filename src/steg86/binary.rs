@@ -515,6 +515,7 @@ impl Text {
     pub fn from_raw(path: &Path, bitness: u32) -> Result<Self> {
         let program_buffer = fs::read(path)?;
 
+        #[allow(clippy::redundant_field_names)]
         Ok(Text {
             bitness: bitness,
             start_offset: 0,
