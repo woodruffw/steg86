@@ -12,7 +12,13 @@ use crate::steg86::binary::Text;
 pub fn profile(matches: &ArgMatches) -> Result<()> {
     let path = matches.value_of("input").unwrap();
     let profile = {
-        let text = Text::from_program(Path::new(path))?;
+        let text = if matches.is_present("raw") {
+            let bitness: u32 = matches.value_of_t("bitness").unwrap();
+            Text::from_raw(Path::new(path), bitness)?
+        } else {
+            Text::from_program(Path::new(path))?
+        };
+
         text.profile()?
     };
 
@@ -41,7 +47,12 @@ pub fn embed(matches: &ArgMatches) -> Result<()> {
         None => Path::new(input).with_extension("steg"),
     };
 
-    let text = Text::from_program(input)?;
+    let text = if matches.is_present("raw") {
+        let bitness: u32 = matches.value_of_t("bitness").unwrap();
+        Text::from_raw(Path::new(input), bitness)?
+    } else {
+        Text::from_program(Path::new(input))?
+    };
 
     let message = {
         let mut message = Vec::new();
@@ -61,7 +72,13 @@ pub fn embed(matches: &ArgMatches) -> Result<()> {
 /// See `steg86 extract -h`.
 pub fn extract(matches: &ArgMatches) -> Result<()> {
     let input = Path::new(matches.value_of("input").unwrap());
-    let text = Text::from_program(input)?;
+
+    let text = if matches.is_present("raw") {
+        let bitness: u32 = matches.value_of_t("bitness").unwrap();
+        Text::from_raw(Path::new(input), bitness)?
+    } else {
+        Text::from_program(Path::new(input))?
+    };
 
     io::stdout().write_all(&text.extract()?)?;
 

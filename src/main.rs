@@ -16,6 +16,22 @@ fn run() -> Result<()> {
                 .about("profile a binary for steganographic storage capacity")
                 // TODO(ww): --json flag.
                 .arg(
+                    Arg::with_name("raw")
+                        .about("treat the input as a raw binary")
+                        .long("raw")
+                        .short('r'),
+                )
+                .arg(
+                    Arg::with_name("bitness")
+                        .about("the bitness of the raw binary")
+                        .long("bitness")
+                        .short('b')
+                        .takes_value(true)
+                        .possible_values(&["16", "32", "64"])
+                        .default_value("64")
+                        .requires("raw"),
+                )
+                .arg(
                     Arg::with_name("input")
                         .about("the binary to profile")
                         .index(1)
@@ -25,6 +41,22 @@ fn run() -> Result<()> {
         .subcommand(
             App::new("embed")
                 .about("embed some data into a binary steganographically")
+                .arg(
+                    Arg::with_name("raw")
+                        .about("treat the input as a raw binary")
+                        .long("raw")
+                        .short('r'),
+                )
+                .arg(
+                    Arg::with_name("bitness")
+                        .about("the bitness of the raw binary")
+                        .long("bitness")
+                        .short('b')
+                        .takes_value(true)
+                        .possible_values(&["16", "32", "64"])
+                        .default_value("64")
+                        .requires("raw"),
+                )
                 .arg(
                     Arg::with_name("input")
                         .about("the binary to embed into")
@@ -41,6 +73,22 @@ fn run() -> Result<()> {
         .subcommand(
             App::new("extract")
                 .about("extract the hidden data from a binary")
+                .arg(
+                    Arg::with_name("raw")
+                        .about("treat the input as a raw binary")
+                        .long("raw")
+                        .short('r'),
+                )
+                .arg(
+                    Arg::with_name("bitness")
+                        .about("the bitness of the raw binary")
+                        .long("bitness")
+                        .short('b')
+                        .takes_value(true)
+                        .possible_values(&["16", "32", "64"])
+                        .default_value("64")
+                        .requires("raw"),
+                )
                 .arg(
                     Arg::with_name("input")
                         .about("the binary to extract from")

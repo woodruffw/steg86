@@ -512,6 +512,17 @@ impl Text {
         Ok(program_buffer)
     }
 
+    pub fn from_raw(path: &Path, bitness: u32) -> Result<Self> {
+        let program_buffer = fs::read(path)?;
+
+        Ok(Text {
+            bitness: bitness,
+            start_offset: 0,
+            end_offset: program_buffer.len(),
+            data: program_buffer,
+        })
+    }
+
     /// Extract the `Text` for a supported program binary.
     pub fn from_program(path: &Path) -> Result<Self> {
         let program_buffer = fs::read(path)?;
