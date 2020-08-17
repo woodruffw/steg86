@@ -126,8 +126,5 @@ hidden in these in a few ways:
   (SIB + 4-byte displacement).
   * There are longer NOPs (11, 15 bytes) that may also be usable.
 
-* `TEST` and `XCHG` don't have duals, but are safe to change the operand order of
-(since `TEST` discards its result and `XCHG` is commutative).
-
 * Going beyond register-to-register duals and rewriting `add`/`sub`, as Hydan does.
 
