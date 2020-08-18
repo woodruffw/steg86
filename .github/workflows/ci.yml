@@ -30,4 +30,6 @@ jobs:
       run: cargo build
 
     - name: Test
-      run: cargo test
+      run: |
+        cargo test
+        ./test/test-cli.sh
