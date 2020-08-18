@@ -86,6 +86,12 @@ lazy_static! {
         Code::Cmp_rm16_r16, Code::Cmp_r16_rm16,
         Code::Cmp_rm32_r32, Code::Cmp_r32_rm32,
         Code::Cmp_rm64_r64, Code::Cmp_r64_rm64,
+
+        // XCHG
+        Code::Xchg_rm8_r8, Code::Xchg_r8_rm8,
+        Code::Xchg_rm16_r16, Code::Xchg_r16_rm16,
+        Code::Xchg_rm32_r32, Code::Xchg_r32_rm32,
+        Code::Xchg_rm64_r64, Code::Xchg_r64_rm64,
     ]
     .iter()
     .cloned()
@@ -151,6 +157,12 @@ static SEMANTIC_PAIRS: &[(Code, Code)] = &[
     (Code::Cmp_rm16_r16, Code::Cmp_r16_rm16),
     (Code::Cmp_rm32_r32, Code::Cmp_r32_rm32),
     (Code::Cmp_rm64_r64, Code::Cmp_r64_rm64),
+
+    // XCHG
+    (Code::XCHG_rm8_r8, Code::XCHG_r8_rm8),
+    (Code::XCHG_rm16_r16, Code::XCHG_r16_rm16),
+    (Code::XCHG_rm32_r32, Code::XCHG_r32_rm32),
+    (Code::XCHG_rm64_r64, Code::XCHG_r64_rm64),
 ];
 
 /// Represents some potentially instrumentable program instruction text.
