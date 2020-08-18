@@ -28,7 +28,6 @@ fn run() -> Result<()> {
                         .short('b')
                         .takes_value(true)
                         .possible_values(&["16", "32", "64"])
-                        .default_value("64")
                         .requires("raw"),
                 )
                 .arg(
@@ -54,7 +53,6 @@ fn run() -> Result<()> {
                         .short('b')
                         .takes_value(true)
                         .possible_values(&["16", "32", "64"])
-                        .default_value("64")
                         .requires("raw"),
                 )
                 .arg(
@@ -86,7 +84,6 @@ fn run() -> Result<()> {
                         .short('b')
                         .takes_value(true)
                         .possible_values(&["16", "32", "64"])
-                        .default_value("64")
                         .requires("raw"),
                 )
                 .arg(
