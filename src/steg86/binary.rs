@@ -503,7 +503,7 @@ impl Text {
     pub fn patch_program(&self, path: &Path) -> Result<Vec<u8>> {
         let mut program_buffer = fs::read(path)?;
 
-        if self.end_offset >= program_buffer.len() {
+        if self.end_offset > program_buffer.len() {
             return Err(anyhow!("proposed patch exceeds input's size"));
         }
 
