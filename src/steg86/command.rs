@@ -13,11 +13,7 @@ pub fn profile(matches: &ArgMatches) -> Result<()> {
     let path = matches.value_of("input").unwrap();
     let profile = {
         let text = if matches.is_present("raw") {
-            let bitness: u32 = if matches.is_present("bitness") {
-                matches.value_of_t("bitness").unwrap()
-            } else {
-                64
-            };
+            let bitness: u32 = matches.value_of_t("bitness").unwrap_or(64);
             Text::from_raw(Path::new(path), bitness)?
         } else {
             Text::from_program(Path::new(path))?
@@ -52,11 +48,7 @@ pub fn embed(matches: &ArgMatches) -> Result<()> {
     };
 
     let text = if matches.is_present("raw") {
-        let bitness: u32 = if matches.is_present("bitness") {
-            matches.value_of_t("bitness").unwrap()
-        } else {
-            64
-        };
+        let bitness: u32 = matches.value_of_t("bitness").unwrap_or(64);
         Text::from_raw(Path::new(input), bitness)?
     } else {
         Text::from_program(Path::new(input))?
@@ -82,11 +74,7 @@ pub fn extract(matches: &ArgMatches) -> Result<()> {
     let input = Path::new(matches.value_of("input").unwrap());
 
     let text = if matches.is_present("raw") {
-        let bitness: u32 = if matches.is_present("bitness") {
-            matches.value_of_t("bitness").unwrap()
-        } else {
-            64
-        };
+        let bitness: u32 = matches.value_of_t("bitness").unwrap_or(64);
         Text::from_raw(Path::new(input), bitness)?
     } else {
         Text::from_program(Path::new(input))?
