@@ -108,6 +108,9 @@ decoding, and [goblin](https://github.com/m4b/goblin) for binary format wranglin
 
 ### Prior work
 
+The inspiration for *steg86* came from [@inventednight](https://github.com/inventednight), who
+described it as an adaptation of a similar idea (also theirs) for RISC-V binaries.
+
 The technique mentioned above is discussed in detail in
 [*Hydan: Hiding Information in Program Binaries*](http://web4.cs.columbia.edu/~angelos/Papers/hydan.pdf) (2004).
 
