@@ -16,13 +16,13 @@ fn run() -> Result<()> {
                 .about("profile a binary for steganographic storage capacity")
                 // TODO(ww): --json flag.
                 .arg(
-                    Arg::with_name("raw")
+                    Arg::new("raw")
                         .about("treat the input as a raw binary")
                         .long("raw")
                         .short('r'),
                 )
                 .arg(
-                    Arg::with_name("bitness")
+                    Arg::new("bitness")
                         .about("the bitness of the raw binary")
                         .long("bitness")
                         .short('b')
@@ -31,7 +31,7 @@ fn run() -> Result<()> {
                         .requires("raw"),
                 )
                 .arg(
-                    Arg::with_name("input")
+                    Arg::new("input")
                         .about("the binary to profile")
                         .index(1)
                         .required(true),
@@ -41,13 +41,13 @@ fn run() -> Result<()> {
             App::new("embed")
                 .about("embed some data into a binary steganographically")
                 .arg(
-                    Arg::with_name("raw")
+                    Arg::new("raw")
                         .about("treat the input as a raw binary")
                         .long("raw")
                         .short('r'),
                 )
                 .arg(
-                    Arg::with_name("bitness")
+                    Arg::new("bitness")
                         .about("the bitness of the raw binary")
                         .long("bitness")
                         .short('b')
@@ -56,13 +56,13 @@ fn run() -> Result<()> {
                         .requires("raw"),
                 )
                 .arg(
-                    Arg::with_name("input")
+                    Arg::new("input")
                         .about("the binary to embed into")
                         .index(1)
                         .required(true),
                 )
                 .arg(
-                    Arg::with_name("output")
+                    Arg::new("output")
                         .about("the path to write the steg'd binary to")
                         .index(2)
                         .required(false),
@@ -72,13 +72,13 @@ fn run() -> Result<()> {
             App::new("extract")
                 .about("extract the hidden data from a binary")
                 .arg(
-                    Arg::with_name("raw")
+                    Arg::new("raw")
                         .about("treat the input as a raw binary")
                         .long("raw")
                         .short('r'),
                 )
                 .arg(
-                    Arg::with_name("bitness")
+                    Arg::new("bitness")
                         .about("the bitness of the raw binary")
                         .long("bitness")
                         .short('b')
@@ -87,7 +87,7 @@ fn run() -> Result<()> {
                         .requires("raw"),
                 )
                 .arg(
-                    Arg::with_name("input")
+                    Arg::new("input")
                         .about("the binary to extract from")
                         .index(1)
                         .required(true),
@@ -96,9 +96,9 @@ fn run() -> Result<()> {
         .get_matches();
 
     match matches.subcommand() {
-        ("profile", Some(matches)) => steg86::command::profile(&matches),
-        ("embed", Some(matches)) => steg86::command::embed(&matches),
-        ("extract", Some(matches)) => steg86::command::extract(&matches),
+        Some(("profile", matches)) => steg86::command::profile(&matches),
+        Some(("embed", matches)) => steg86::command::embed(&matches),
+        Some(("extract", matches)) => steg86::command::extract(&matches),
         _ => unreachable!(),
     }
 }
