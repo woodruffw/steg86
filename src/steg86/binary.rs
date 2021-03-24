@@ -290,7 +290,7 @@ impl Text {
             // First, decode the instruction at `ip` in the original text.
             // Barf if it isn't one of our supported opcodes.
             let instruction = {
-                decoder.set_position(offset);
+                decoder.try_set_position(offset)?;
                 // NOTE(ww): This unwrap isn't strictly safe, but a decoder error
                 // here indicates that we've messed up earlier in profiling.
                 let instruction = decoder.iter().next().unwrap();
@@ -393,7 +393,7 @@ impl Text {
                 .take(STEG86_HEADER_SIZE_BITS)
             {
                 let code = {
-                    decoder.set_position(offset);
+                    decoder.try_set_position(offset)?;
                     // NOTE(ww): This unwrap isn't strictly safe, but a decoder error
                     // here indicates that we've messed up earlier in profiling.
                     let code = decoder.iter().next().unwrap().code();
@@ -461,7 +461,7 @@ impl Text {
                 .take(message_len * 8)
             {
                 let code = {
-                    decoder.set_position(offset);
+                    decoder.try_set_position(offset)?;
                     // NOTE(ww): This unwrap isn't strictly safe, but a decoder error
                     // here indicates that we've messed up earlier in profiling.
                     let code = decoder.iter().next().unwrap().code();
