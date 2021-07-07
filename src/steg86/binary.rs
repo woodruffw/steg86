@@ -546,8 +546,8 @@ impl Text {
 
         if let Some(text_section) = elf.section_headers.iter().find(|&sect| {
             elf.shdr_strtab
-                .get(sect.sh_name)
-                .map_or(false, |name| name.map_or(false, |name| name == ".text"))
+                .get_at(sect.sh_name)
+                .map_or(false, |name| name == ".text")
         }) {
             let size = text_section.sh_size as usize;
             let offset = text_section.sh_offset as usize;
