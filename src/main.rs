@@ -1,7 +1,7 @@
+use std::process;
+
 use anyhow::Result;
 use clap::{App, AppSettings, Arg};
-
-use std::process;
 
 mod steg86;
 
@@ -96,9 +96,9 @@ fn run() -> Result<()> {
         .get_matches();
 
     match matches.subcommand() {
-        Some(("profile", matches)) => steg86::command::profile(&matches),
-        Some(("embed", matches)) => steg86::command::embed(&matches),
-        Some(("extract", matches)) => steg86::command::extract(&matches),
+        Some(("profile", matches)) => steg86::command::profile(matches),
+        Some(("embed", matches)) => steg86::command::embed(matches),
+        Some(("extract", matches)) => steg86::command::extract(matches),
         _ => unreachable!(),
     }
 }

@@ -1,13 +1,13 @@
+use std::collections::HashSet;
+use std::fs;
+use std::io::Read;
+use std::path::Path;
+
 use anyhow::{anyhow, Result};
 use bit_vec::BitVec;
 use goblin::{elf, mach, pe, Object};
 use iced_x86::{Code, Decoder, DecoderOptions, Encoder, Instruction, OpKind};
 use lazy_static::lazy_static;
-
-use std::collections::HashSet;
-use std::fs;
-use std::io::Read;
-use std::path::Path;
 
 /// The magic byte that identifies a steg86-instrumented file.
 static STEG86_MAGIC: u8 = b'w';
@@ -276,7 +276,7 @@ impl Text {
             // See: https://github.com/contain-rs/bit-vec/issues/63
             let mut bytes = vec![STEG86_MAGIC, STEG86_VERSION];
             bytes.extend_from_slice(&(message.len() as u16).to_le_bytes());
-            bytes.extend_from_slice(&message);
+            bytes.extend_from_slice(message);
             BitVec::from_bytes(&bytes)
         };
 
@@ -651,8 +651,9 @@ impl Text {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::iter;
+
+    use super::*;
 
     // Create a `Text` with `desired_bits` bits of steganographic capacity.
     fn dummy_text(desired_bits: usize) -> Text {

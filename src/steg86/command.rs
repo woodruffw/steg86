@@ -1,9 +1,9 @@
-use anyhow::Result;
-use clap::ArgMatches;
-
 use std::fs;
 use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
+
+use anyhow::Result;
+use clap::ArgMatches;
 
 use crate::steg86::binary::Text;
 
