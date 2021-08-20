@@ -334,11 +334,11 @@ impl Text {
             log::debug!("{:?} => {:?}", old_code, new_code);
 
             // Here's where the magic happens.
-            let new_instruction = Instruction::with_reg_reg(
+            let new_instruction = Instruction::with2(
                 new_code,
                 instruction.op0_register(),
                 instruction.op1_register(),
-            );
+            )?;
             let new_len = encoder
                 .encode(&new_instruction, offset as u64)
                 .map_err(|s| anyhow!(s))?;
