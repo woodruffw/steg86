@@ -7,7 +7,6 @@ mod steg86;
 
 fn run() -> Result<()> {
     let matches = App::new(env!("CARGO_PKG_NAME"))
-        .setting(AppSettings::DisableVersionForSubcommands)
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .version(env!("CARGO_PKG_VERSION"))
         .about(env!("CARGO_PKG_DESCRIPTION"))
