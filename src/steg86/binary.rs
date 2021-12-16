@@ -13,7 +13,7 @@ use lazy_static::lazy_static;
 static STEG86_MAGIC: u8 = b'w';
 
 /// A counter corresponding to protocol changes in steg86.
-static STEG86_VERSION: u8 = 0;
+static STEG86_VERSION: u8 = 1;
 
 /// The maximum capacity, in bytes, of a steg86-instrumented file.
 /// Inputs may not be larger than this value.
@@ -86,6 +86,12 @@ lazy_static! {
         Code::Cmp_rm16_r16, Code::Cmp_r16_rm16,
         Code::Cmp_rm32_r32, Code::Cmp_r32_rm32,
         Code::Cmp_rm64_r64, Code::Cmp_r64_rm64,
+
+        // TEST
+        Code::Test_rm8_r8,
+        Code::Test_rm16_r16,
+        Code::Test_rm32_r32,
+        Code::Test_rm64_r64,
     ]
     .iter()
     .cloned()
@@ -153,6 +159,23 @@ static SEMANTIC_PAIRS: &[(Code, Code)] = &[
     (Code::Cmp_rm64_r64, Code::Cmp_r64_rm64),
 ];
 
+lazy_static! {
+    /// The set of all commutative opcodes, i.e. the ones
+    /// with two different registers as operands where their
+    /// order does not change the computation
+    #[rustfmt::skip]
+    static ref COMMUTATIVE_OPCODES: HashSet<Code> = [
+        // TEST
+        Code::Test_rm8_r8,
+        Code::Test_rm16_r16,
+        Code::Test_rm32_r32,
+        Code::Test_rm64_r64,
+    ]
+    .iter()
+    .cloned()
+    .collect();
+}
+
 /// Represents some potentially instrumentable program instruction text.
 #[derive(Clone, Debug)]
 pub struct Text {
@@ -216,6 +239,14 @@ impl Text {
             // If not, skip it.
             if instruction.op0_kind() != OpKind::Register
                 || instruction.op1_kind() != OpKind::Register
+            {
+                continue;
+            }
+
+            // Is our instruction commutative in its registers?
+            // If so and the registers are the equal, skip it.
+            if COMMUTATIVE_OPCODES.contains(&instruction.code())
+                && instruction.op0_register() == instruction.op1_register()
             {
                 continue;
             }
@@ -306,10 +337,15 @@ impl Text {
                 instruction
             };
 
+            let r0 = instruction.op0_register();
+            let r1 = instruction.op1_register();
             // Next, transform that instruction as per our needed bit of information.
             // If we're already right, just continue.
             let old_code = instruction.code();
-            let new_code = {
+            let commutative = COMMUTATIVE_OPCODES.contains(&old_code);
+            let new_code = if commutative {
+                old_code
+            } else {
                 // NOTE(ww): This unwrap is safe, since every opcode in SUPPORTED_OPCODES
                 // also appears in a SEMANTIC_PAIRS tuple.
                 let tuple = SEMANTIC_PAIRS
@@ -330,15 +366,26 @@ impl Text {
                     (true, true) => tuple.1,
                 }
             };
+            let (new_r0, new_r1) = if !commutative {
+                (r0, r1)
+            } else {
+                match (bit, (r0 as usize) < (r1 as usize)) {
+                    (true, false) | (false, true) => (r1, r0),
+                    (true, true) | (false, false) => {
+                        log::debug!(
+                            "bit at text offset {} is already correct ({}), skipping",
+                            offset,
+                            bit
+                        );
+                        continue;
+                    }
+                }
+            };
 
             log::debug!("{:?} => {:?}", old_code, new_code);
 
             // Here's where the magic happens.
-            let new_instruction = Instruction::with2(
-                new_code,
-                instruction.op0_register(),
-                instruction.op1_register(),
-            )?;
+            let new_instruction = Instruction::with2(new_code, new_r0, new_r1)?;
             let new_len = encoder
                 .encode(&new_instruction, offset as u64)
                 .map_err(|s| anyhow!(s))?;
@@ -392,11 +439,12 @@ impl Text {
                 .iter()
                 .take(STEG86_HEADER_SIZE_BITS)
             {
-                let code = {
+                let instruction = {
                     decoder.try_set_position(offset)?;
                     // NOTE(ww): This unwrap isn't strictly safe, but a decoder error
                     // here indicates that we've messed up earlier in profiling.
-                    let code = decoder.iter().next().unwrap().code();
+                    let instruction = decoder.iter().next().unwrap();
+                    let code = instruction.code();
 
                     if !SUPPORTED_OPCODES.contains(&code) {
                         return Err(anyhow!(
@@ -406,15 +454,21 @@ impl Text {
                         ));
                     }
 
-                    code
+                    instruction
                 };
 
-                let tuple = SEMANTIC_PAIRS
-                    .iter()
-                    .find(|&&t| code == t.0 || code == t.1)
-                    .unwrap();
+                let code = instruction.code();
+                if COMMUTATIVE_OPCODES.contains(&code) {
+                    let (r0, r1) = (instruction.op0_register(), instruction.op1_register());
+                    header_bits.push((r0 as usize) < (r1 as usize));
+                } else {
+                    let tuple = SEMANTIC_PAIRS
+                        .iter()
+                        .find(|&&t| code == t.0 || code == t.1)
+                        .unwrap();
 
-                header_bits.push(code != tuple.0);
+                    header_bits.push(code != tuple.0);
+                }
             }
 
             header_bits.to_bytes()
@@ -460,11 +514,12 @@ impl Text {
                 .skip(STEG86_HEADER_SIZE_BITS)
                 .take(message_len * 8)
             {
-                let code = {
+                let instruction = {
                     decoder.try_set_position(offset)?;
                     // NOTE(ww): This unwrap isn't strictly safe, but a decoder error
                     // here indicates that we've messed up earlier in profiling.
-                    let code = decoder.iter().next().unwrap().code();
+                    let instruction = decoder.iter().next().unwrap();
+                    let code = instruction.code();
 
                     if !SUPPORTED_OPCODES.contains(&code) {
                         return Err(anyhow!(
@@ -474,15 +529,21 @@ impl Text {
                         ));
                     }
 
-                    code
+                    instruction
                 };
 
-                let tuple = SEMANTIC_PAIRS
-                    .iter()
-                    .find(|&&t| code == t.0 || code == t.1)
-                    .unwrap();
+                let code = instruction.code();
+                if COMMUTATIVE_OPCODES.contains(&code) {
+                    let (r0, r1) = (instruction.op0_register(), instruction.op1_register());
+                    message_bits.push((r0 as usize) < (r1 as usize));
+                } else {
+                    let tuple = SEMANTIC_PAIRS
+                        .iter()
+                        .find(|&&t| code == t.0 || code == t.1)
+                        .unwrap();
 
-                message_bits.push(code != tuple.0);
+                    message_bits.push(code != tuple.0);
+                }
             }
 
             message_bits.to_bytes()
