@@ -201,6 +201,9 @@ pub struct StegProfile {
     /// The number of available semantic pairs.
     pub semantic_pairs: usize,
 
+    /// The number of available commutative instructions.
+    pub commutative_instructions: usize,
+
     /// The total potential information capacity, in bits. This will always be strictly less
     /// than `semantic_pairs`, to accommodate the steg86 header.
     pub information_capacity: usize,
@@ -214,6 +217,8 @@ impl Text {
     /// unsuitable for steg86 (e.g., if it has too few semantic pairs).
     pub fn profile(&self) -> Result<StegProfile> {
         let mut icount = 0;
+        let mut pair_count = 0;
+        let mut commutative_count = 0;
         let mut offsets = Vec::new();
         let mut decoder = Decoder::new(self.bitness, &self.data, DecoderOptions::NONE);
 
@@ -243,12 +248,17 @@ impl Text {
                 continue;
             }
 
-            // Is our instruction commutative in its registers?
-            // If so and the registers are the equal, skip it.
-            if COMMUTATIVE_OPCODES.contains(&instruction.code())
-                && instruction.op0_register() == instruction.op1_register()
-            {
-                continue;
+            // Are we handling a semantic pair, or a commutative instruction?
+            // Increment the appropriate counter.
+            if COMMUTATIVE_OPCODES.contains(&instruction.code()) {
+                // If it's commutative and the registers are equal, skip it.
+                if instruction.op0_register() == instruction.op1_register() {
+                    continue;
+                }
+
+                commutative_count += 1;
+            } else {
+                pair_count += 1;
             }
 
             // We don't set a different base IP, so ip here always corresponds
@@ -266,9 +276,20 @@ impl Text {
             ));
         }
 
+        // Sanity check: we should have exactly as many offsets as the
+        // total number of semantic pairs and commutative instructions.
+        if offsets.len() != pair_count + commutative_count {
+            return Err(anyhow!(
+                "serious internal error: mismatch between offset count and potential instruction count ({} != {})",
+                offsets.len(),
+                pair_count + commutative_count,
+            ));
+        }
+
         Ok(StegProfile {
             instruction_count: icount,
-            semantic_pairs: offsets.len(),
+            semantic_pairs: pair_count,
+            commutative_instructions: commutative_count,
             information_capacity: offsets.len() - STEG86_HEADER_SIZE_BITS,
             information_offsets: offsets,
         })
@@ -825,4 +846,6 @@ mod tests {
     }
 
     // TODO: Come up with some binary format tests.
+
+    // TODO: Tests for commutative instructions like TEST.
 }

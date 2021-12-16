@@ -26,10 +26,12 @@ pub fn profile(matches: &ArgMatches) -> Result<()> {
         "Summary for {}:\n\
         \t{} total instructions\n\
         \t{} potential semantic pairs\n\
+        \t{} potential commutative instructions\n\
         \t{} bits of information capacity ({} bytes, approx. {}KB)",
         path,
         profile.instruction_count,
         profile.semantic_pairs,
+        profile.commutative_instructions,
         profile.information_capacity,
         profile.information_capacity / 8,
         profile.information_capacity / 8 / 1024,
