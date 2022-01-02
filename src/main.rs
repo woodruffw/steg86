@@ -5,8 +5,8 @@ use clap::{App, AppSettings, Arg};
 
 mod steg86;
 
-fn run() -> Result<()> {
-    let matches = App::new(env!("CARGO_PKG_NAME"))
+fn app() -> App<'static> {
+    App::new(env!("CARGO_PKG_NAME"))
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .version(env!("CARGO_PKG_VERSION"))
         .about(env!("CARGO_PKG_DESCRIPTION"))
@@ -16,13 +16,13 @@ fn run() -> Result<()> {
                 // TODO(ww): --json flag.
                 .arg(
                     Arg::new("raw")
-                        .about("treat the input as a raw binary")
+                        .help("treat the input as a raw binary")
                         .long("raw")
                         .short('r'),
                 )
                 .arg(
                     Arg::new("bitness")
-                        .about("the bitness of the raw binary")
+                        .help("the bitness of the raw binary")
                         .long("bitness")
                         .short('b')
                         .takes_value(true)
@@ -31,7 +31,7 @@ fn run() -> Result<()> {
                 )
                 .arg(
                     Arg::new("input")
-                        .about("the binary to profile")
+                        .help("the binary to profile")
                         .index(1)
                         .required(true),
                 ),
@@ -41,13 +41,13 @@ fn run() -> Result<()> {
                 .about("embed some data into a binary steganographically")
                 .arg(
                     Arg::new("raw")
-                        .about("treat the input as a raw binary")
+                        .help("treat the input as a raw binary")
                         .long("raw")
                         .short('r'),
                 )
                 .arg(
                     Arg::new("bitness")
-                        .about("the bitness of the raw binary")
+                        .help("the bitness of the raw binary")
                         .long("bitness")
                         .short('b')
                         .takes_value(true)
@@ -56,13 +56,13 @@ fn run() -> Result<()> {
                 )
                 .arg(
                     Arg::new("input")
-                        .about("the binary to embed into")
+                        .help("the binary to embed into")
                         .index(1)
                         .required(true),
                 )
                 .arg(
                     Arg::new("output")
-                        .about("the path to write the steg'd binary to")
+                        .help("the path to write the steg'd binary to")
                         .index(2)
                         .required(false),
                 ),
@@ -72,13 +72,13 @@ fn run() -> Result<()> {
                 .about("extract the hidden data from a binary")
                 .arg(
                     Arg::new("raw")
-                        .about("treat the input as a raw binary")
+                        .help("treat the input as a raw binary")
                         .long("raw")
                         .short('r'),
                 )
                 .arg(
                     Arg::new("bitness")
-                        .about("the bitness of the raw binary")
+                        .help("the bitness of the raw binary")
                         .long("bitness")
                         .short('b')
                         .takes_value(true)
@@ -87,12 +87,15 @@ fn run() -> Result<()> {
                 )
                 .arg(
                     Arg::new("input")
-                        .about("the binary to extract from")
+                        .help("the binary to extract from")
                         .index(1)
                         .required(true),
                 ),
         )
-        .get_matches();
+}
+
+fn run() -> Result<()> {
+    let matches = app().get_matches();
 
     match matches.subcommand() {
         Some(("profile", matches)) => steg86::command::profile(matches),
@@ -112,4 +115,14 @@ fn main() {
             1
         }
     });
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_app() {
+        app().debug_assert();
+    }
 }
