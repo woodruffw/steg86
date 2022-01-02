@@ -38,7 +38,8 @@ $ steg86 profile /bin/bash
 Summary for /bin/bash:
   175828 total instructions
   27957 potential semantic pairs
-  27925 bits of information capacity (approx. 3KB)
+  19 potential commutative instructions
+  27944 bits of information capacity (3493 bytes, approx. 3KB)
 ```
 
 ### Embedding
