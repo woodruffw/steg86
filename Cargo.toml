@@ -18,7 +18,7 @@ disable-publish = true # handled by GitHub Actions
 [dependencies]
 anyhow = "1.0"
 bit-vec = "0.6.3"
-clap = "3.0.6"
+clap = "3.0.7"
 env_logger = "0.9"
 goblin = "0.4"
 iced-x86 = "1.15.0"
