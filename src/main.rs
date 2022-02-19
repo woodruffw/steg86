@@ -1,7 +1,7 @@
 use std::process;
 
 use anyhow::Result;
-use clap::{Command, Arg};
+use clap::{Arg, Command};
 
 mod steg86;
 
