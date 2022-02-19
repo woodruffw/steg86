@@ -1,17 +1,17 @@
 use std::process;
 
 use anyhow::Result;
-use clap::{App, AppSettings, Arg};
+use clap::{Command, Arg};
 
 mod steg86;
 
-fn app() -> App<'static> {
-    App::new(env!("CARGO_PKG_NAME"))
-        .setting(AppSettings::SubcommandRequiredElseHelp)
+fn app() -> Command<'static> {
+    Command::new(env!("CARGO_PKG_NAME"))
+        .subcommand_required(true)
         .version(env!("CARGO_PKG_VERSION"))
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .subcommand(
-            App::new("profile")
+            Command::new("profile")
                 .about("profile a binary for steganographic storage capacity")
                 // TODO(ww): --json flag.
                 .arg(
@@ -37,7 +37,7 @@ fn app() -> App<'static> {
                 ),
         )
         .subcommand(
-            App::new("embed")
+            Command::new("embed")
                 .about("embed some data into a binary steganographically")
                 .arg(
                     Arg::new("raw")
@@ -68,7 +68,7 @@ fn app() -> App<'static> {
                 ),
         )
         .subcommand(
-            App::new("extract")
+            Command::new("extract")
                 .about("extract the hidden data from a binary")
                 .arg(
                     Arg::new("raw")
