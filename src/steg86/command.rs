@@ -10,10 +10,10 @@ use crate::steg86::binary::Text;
 /// Display the steganographic profile for the input.
 /// See `steg86 profile -h`.
 pub fn profile(matches: &ArgMatches) -> Result<()> {
-    let path = matches.value_of("input").unwrap();
+    let path = matches.get_one::<String>("input").unwrap();
     let profile = {
-        let text = if matches.is_present("raw") {
-            let bitness: u32 = matches.value_of_t("bitness").unwrap_or(64);
+        let text = if *matches.get_one::<bool>("raw").unwrap() {
+            let bitness: u32 = *matches.get_one("bitness").unwrap_or(&64);
             Text::from_raw(Path::new(path), bitness)?
         } else {
             Text::from_program(Path::new(path))?
@@ -43,14 +43,14 @@ pub fn profile(matches: &ArgMatches) -> Result<()> {
 /// Embed a message (provided via `stdin`) into the input.
 /// See `steg86 embed -h`.
 pub fn embed(matches: &ArgMatches) -> Result<()> {
-    let input = Path::new(matches.value_of("input").unwrap());
-    let output = match matches.value_of("output") {
+    let input = Path::new(matches.get_one::<String>("input").unwrap());
+    let output = match matches.get_one::<String>("output") {
         Some(output) => PathBuf::from(output),
         None => Path::new(input).with_extension("steg"),
     };
 
-    let text = if matches.is_present("raw") {
-        let bitness: u32 = matches.value_of_t("bitness").unwrap_or(64);
+    let text = if *matches.get_one::<bool>("raw").unwrap() {
+        let bitness: u32 = *matches.get_one("bitness").unwrap_or(&64);
         Text::from_raw(Path::new(input), bitness)?
     } else {
         Text::from_program(Path::new(input))?
@@ -73,10 +73,10 @@ pub fn embed(matches: &ArgMatches) -> Result<()> {
 /// Extract a message (and stream it to `stdout`) from the input.
 /// See `steg86 extract -h`.
 pub fn extract(matches: &ArgMatches) -> Result<()> {
-    let input = Path::new(matches.value_of("input").unwrap());
+    let input = Path::new(matches.get_one::<String>("input").unwrap());
 
-    let text = if matches.is_present("raw") {
-        let bitness: u32 = matches.value_of_t("bitness").unwrap_or(64);
+    let text = if *matches.get_one::<bool>("raw").unwrap() {
+        let bitness: u32 = *matches.get_one("bitness").unwrap_or(&64);
         Text::from_raw(Path::new(input), bitness)?
     } else {
         Text::from_program(Path::new(input))?
