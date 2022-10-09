@@ -1,11 +1,11 @@
 use std::process;
 
 use anyhow::Result;
-use clap::{Arg, Command};
+use clap::{Arg, ArgAction, Command};
 
 mod steg86;
 
-fn app() -> Command<'static> {
+fn app() -> Command {
     Command::new(env!("CARGO_PKG_NAME"))
         .subcommand_required(true)
         .version(env!("CARGO_PKG_VERSION"))
@@ -18,15 +18,15 @@ fn app() -> Command<'static> {
                     Arg::new("raw")
                         .help("treat the input as a raw binary")
                         .long("raw")
-                        .short('r'),
+                        .short('r')
+                        .action(ArgAction::SetTrue),
                 )
                 .arg(
                     Arg::new("bitness")
                         .help("the bitness of the raw binary")
                         .long("bitness")
                         .short('b')
-                        .takes_value(true)
-                        .possible_values(&["16", "32", "64"])
+                        .value_parser(["16", "32", "64"])
                         .requires("raw"),
                 )
                 .arg(
@@ -43,15 +43,15 @@ fn app() -> Command<'static> {
                     Arg::new("raw")
                         .help("treat the input as a raw binary")
                         .long("raw")
-                        .short('r'),
+                        .short('r')
+                        .action(ArgAction::SetTrue),
                 )
                 .arg(
                     Arg::new("bitness")
                         .help("the bitness of the raw binary")
                         .long("bitness")
                         .short('b')
-                        .takes_value(true)
-                        .possible_values(&["16", "32", "64"])
+                        .value_parser(["16", "32", "64"])
                         .requires("raw"),
                 )
                 .arg(
@@ -74,15 +74,15 @@ fn app() -> Command<'static> {
                     Arg::new("raw")
                         .help("treat the input as a raw binary")
                         .long("raw")
-                        .short('r'),
+                        .short('r')
+                        .action(ArgAction::SetTrue),
                 )
                 .arg(
                     Arg::new("bitness")
                         .help("the bitness of the raw binary")
                         .long("bitness")
                         .short('b')
-                        .takes_value(true)
-                        .possible_values(&["16", "32", "64"])
+                        .value_parser(["16", "32", "64"])
                         .requires("raw"),
                 )
                 .arg(
