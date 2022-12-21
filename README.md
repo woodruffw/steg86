@@ -2,7 +2,7 @@ steg86
 ======
 
 ![license](https://raster.shields.io/badge/license-MIT%20with%20restrictions-green.png)
-[![Build Status](https://img.shields.io/github/workflow/status/woodruffw/steg86/CI/master)](https://github.com/woodruffw/steg86/actions?query=workflow%3ACI)
+[![CI](https://github.com/woodruffw/steg86/actions/workflows/ci.yml/badge.svg)](https://github.com/woodruffw/steg86/actions/workflows/ci.yml)
 
 *steg86* is a format-agnostic [steganographic](https://en.wikipedia.org/wiki/Steganography) tool
 for x86 and AMD64 binaries. You can use it to hide information in compiled programs, regardless of
