@@ -527,7 +527,7 @@ impl Text {
         // TODO(ww): De-dupe the decode loop here.
         let message_bytes = {
             let mut message_bits = BitVec::new();
-            message_bits.reserve(profile.information_capacity as usize);
+            message_bits.reserve(profile.information_capacity);
 
             for &offset in profile
                 .information_offsets
@@ -633,11 +633,11 @@ impl Text {
         }) {
             let size = text_section.sh_size as usize;
             let offset = text_section.sh_offset as usize;
-            if size as usize >= program_buffer.len() || offset as usize >= program_buffer.len() {
+            if size >= program_buffer.len() || offset >= program_buffer.len() {
                 return Err(anyhow!("invalid size for .text section"));
             }
 
-            let mut section_buf = vec![0u8; size as usize];
+            let mut section_buf = vec![0u8; size];
             (&program_buffer[offset..]).read_exact(&mut section_buf)?;
 
             #[allow(clippy::redundant_field_names)]
