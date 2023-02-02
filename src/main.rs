@@ -111,7 +111,7 @@ fn main() {
     process::exit(match run() {
         Ok(()) => 0,
         Err(e) => {
-            eprintln!("Fatal: {}", e);
+            eprintln!("Fatal: {e}");
             1
         }
     });
