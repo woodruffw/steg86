@@ -312,7 +312,7 @@ dependencies = [
 
 [[package]]
 name = "steg86"
-version = "0.2.1-rc.1"
+version = "0.2.1"
 dependencies = [
  "anyhow",
  "bit-vec",
