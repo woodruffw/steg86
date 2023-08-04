@@ -2,7 +2,7 @@
 name = "steg86"
 description = "A tool for hiding messages in x86(_64) binaries"
 license-file = "LICENSE"
-version = "0.2.0"
+version = "0.2.1-rc.1"
 authors = ["William Woodruff <william@yossarian.net>"]
 edition = "2021"
 readme = "README.md"
