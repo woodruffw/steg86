@@ -12,7 +12,6 @@ keywords = ["cli", "steganography", "steg", "x86"]
 categories = ["command-line-utilities", "encoding"]
 
 [package.metadata.release]
-dev-version = false
 publish = false # handled by GitHub Actions
 push = true
 
