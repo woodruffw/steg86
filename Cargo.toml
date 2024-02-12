@@ -18,7 +18,7 @@ push = true
 [dependencies]
 anyhow = "1.0"
 bit-vec = "0.6"
-clap = "4.4"
+clap = "4.5"
 env_logger = "0.10"
 goblin = "0.8"
 iced-x86 = "1.21"
