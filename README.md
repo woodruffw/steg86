@@ -62,7 +62,7 @@ To extract a message from a binary:
 
 ```bash
 $ steg86 extract bash.steg > my_message
-$ cat message
+$ cat my_message
 here is my secret message
 ```
 
