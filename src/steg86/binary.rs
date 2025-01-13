@@ -626,11 +626,11 @@ impl Text {
             _ => return Err(anyhow!("unknown ELF e_machine: {}", elf.header.e_machine)),
         };
 
-        if let Some(text_section) = elf.section_headers.iter().find(|&sect| {
-            elf.shdr_strtab
-                .get_at(sect.sh_name)
-                .map_or(false, |name| name == ".text")
-        }) {
+        if let Some(text_section) = elf
+            .section_headers
+            .iter()
+            .find(|&sect| elf.shdr_strtab.get_at(sect.sh_name) == Some(".text"))
+        {
             let size = text_section.sh_size as usize;
             let offset = text_section.sh_offset as usize;
             if size >= program_buffer.len() || offset >= program_buffer.len() {
@@ -668,12 +668,12 @@ impl Text {
         if let Some(text_segment) = macho
             .segments
             .iter()
-            .find(|&seg| seg.name().map_or(false, |name| name == "__TEXT"))
+            .find(|&seg| seg.name().is_ok_and(|name| name == "__TEXT"))
         {
             if let Some(text_section) = text_segment
                 .sections()?
                 .iter()
-                .find(|&sect| sect.0.name().map_or(false, |name| name == "__text"))
+                .find(|&sect| sect.0.name().is_ok_and(|name| name == "__text"))
             {
                 #[allow(clippy::redundant_field_names)]
                 Ok(Text {
@@ -706,7 +706,7 @@ impl Text {
         if let Some(text_section) = pe
             .sections
             .iter()
-            .find(|&sect| sect.name().map_or(false, |name| name == ".text"))
+            .find(|&sect| sect.name().is_ok_and(|name| name == ".text"))
         {
             // NOTE(ww): Intuitively, SizeOfRawData would be correct here.
             // In practice, however, PE/PE32+s have page-aligned .text sections filled with
