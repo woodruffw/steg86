@@ -17,7 +17,7 @@ push = true
 
 [dependencies]
 anyhow = "1.0"
-bit-vec = "0.8"
+bit-vec = "0.9"
 clap = "4.6"
 env_logger = "0.10"
 goblin = "0.10"
